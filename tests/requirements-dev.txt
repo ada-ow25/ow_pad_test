@@ -1,0 +1,4 @@
+# Extra dependencies for running the test suite locally / in CI.
+# Inference-only deps live in requirements.txt; this just adds pytest on top.
+-r ../requirements.txt
+pytest==9.1.1
