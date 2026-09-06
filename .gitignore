@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Tooling
+.claude/
+.ipynb_checkpoints/
+
+# Provided dataset -- supplied via the exercise link, not ours to redistribute
+data/
+
+# Inference output
+scores.csv
+
+# External validation: raw videos re-fetchable via external/fetch_external.sh
+external/monitors_attacks.tar.gz
+external/monitors/
+external/axon_display/attack/*.mp4
+external/axon_display/attack/*.MOV
+external/axon_display/attack_frames/
+external/monitors_frames/
