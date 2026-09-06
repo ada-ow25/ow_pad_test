@@ -1,0 +1,8 @@
+# Inference dependencies only -- pinned to the versions this was developed and
+# verified against. The Dockerfile installs exactly this set.
+numpy==2.4.6
+opencv-python-headless==5.0.0.93
+pandas==3.0.5
+scikit-learn==1.9.0
+scipy==1.17.1
+joblib==1.6.0
