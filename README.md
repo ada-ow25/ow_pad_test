@@ -98,7 +98,7 @@ also the best-performing one, and its coefficients are directly auditable.
 | `global_analysis.ipynb` | the full investigation of the global features |
 | `patch_analysis.ipynb` | patch-feature experiment — 12 built, 1 adopted |
 | `external_validation.ipynb` | scores the model on unseen public attack data |
-| `report.md` | technical report |
+| `report.docx` | technical report |
 | `features_cache.csv` | cached global features, so analysis re-runs are instant |
 | `features_patch_cache.csv` | cached patch features (slow to compute: ~64 patches/image) |
 | `.github/workflows/tests.yml` | CI: runs the unit tests on every push/PR to `master` |
@@ -116,7 +116,7 @@ python train.py             # refits from features_cache.csv, rewrites artefacts
 
 ## Limitations
 
-- **It fails on unseen attacks — measured in `external_validation.ipynb`.** APCER 1.00 against 15 attack
+- **It fails on unseen attacks — measured in `external_validation.ipynb`.** APCER 0.97 against 15 attack
   videos from two public datasets (`external_validation.ipynb`). Six of nine features point
   the wrong way on that data, carrying 78% of the coefficient weight; the dominant feature
   `noise` is outright inverted. The geometry cues (`perpendicular_ratio`, `glare_area`,
