@@ -35,8 +35,8 @@ filename,score,is_attack
 11130.png,0.999997,1
 ```
 
-- `score` — probability in [0, 1]; higher is more attack-like.
-- `is_attack` — `score` thresholded at the chosen operating point.
+- `score` - probability in [0, 1]; higher is more attack-like.
+- `is_attack` -`score` thresholded at the chosen operating point.
 - Files that fail to decode get an empty score rather than being dropped, so the row count
   always matches the input folder. The failures are also listed on stderr.
 
@@ -55,31 +55,29 @@ else in the system:**
 | `0.05` | ~5% | 0.04 (1/23) |
 | `0.1` | ~10% | 0.00 (0/23) |
 
-Measured out-of-fold and **pooled over 20 fold splits**, not taken from a single one — a
+Measured out-of-fold and **pooled over 20 fold splits**, not taken from a single one - a
 single split moves the 1% threshold between 0.812 and 0.921, so calibrating from one would
-bake in whichever split happened to be used. Median attacks accepted is quoted above; the
+bake in whichever split happened to be used. Above is the Median attacks accepted; the
 spread across splits is 3–7 of 23 at the 1% point.
 
 The default is 1%: 5% catches nearly every attack but rejects one genuine user in twenty,
-which is a lot of friction for identity verification. There is no setting that is good on
-both axes — that trade-off is the honest result, and `report_assets/det_curve.png` shows it
-in full.
+which to me seems like a lot of friction for identity verification. (see`report_assets/det_curve.png`).
 
 The 0.1% threshold sits in the extreme upper tail of 1000 bona fide scores. Pooling splits
 removes fold-assignment noise but cannot add information about that tail, which still rests
 on a handful of distinct images. Treat it as indicative only.
 
-## How it works
+## How it works (also in report)
 
-1. **Resize to 1024×1024** (`INTER_AREA`). Not cosmetic — in the training data every bona
-   fide image was 1024² and every attack was larger, so raw images are separable on
+1. **Resize to 1024×1024** (`INTER_AREA`). In the training data every bona
+   fide image was 1024x1024 and every attack was larger, so raw images are separable on
    dimensions alone. Several features are directly sensitive to pixel dimensions.
 2. **Extract 9 features** (`features.py`) covering image quality, colour, glare, framing,
    fine-detail content and edge orientation. Eight of the nine are global statistics; the
    ninth, `hf_energy_pstd`, is computed over an 8×8 grid of patches and measures *spatial
    variation* in fine detail — attacks are unnaturally uniform across the frame. Six other
-   features were built and dropped on evidence (VIF, ablation and L1 selection agreed) —
-   see `global_analysis.ipynb` §16 and `patch_analysis.ipynb`.
+   features were built and dropped on evidence (VIF, ablation and L1 selection agreed) -
+   see `global_analysis.ipynb` and `patch_analysis.ipynb`.
 3. **Score** with a logistic regression over rank-transformed features
    (`artefacts/model.joblib`). Regularisation was tuned with nested CV and did not help —
    the untuned default is used deliberately; see report.
@@ -94,30 +92,31 @@ also the best-performing one, and its coefficients are directly auditable.
 |---|---|
 | `infer.py` | inference CLI — folder in, CSV out |
 | `features.py` | 15 feature formulas; 9 ship, 6 evaluated and dropped |
-| `test_features.py` | unit tests (53), one group per formula |
+| `tests/test_features.py` | unit tests (53), one group per formula |
 | `train.py` | refits the model, writes artefacts and the DET curve |
 | `artefacts/` | fitted model + thresholds and provenance (`config.json`) |
 | `global_analysis.ipynb` | the full investigation of the global features |
 | `patch_analysis.ipynb` | patch-feature experiment — 12 built, 1 adopted |
-| `external_validation.ipynb` | **scores the model on unseen public attack data** |
+| `external_validation.ipynb` | scores the model on unseen public attack data |
 | `report.md` | technical report |
 | `features_cache.csv` | cached global features, so analysis re-runs are instant |
 | `features_patch_cache.csv` | cached patch features (slow to compute: ~64 patches/image) |
+| `.github/workflows/tests.yml` | CI: runs the unit tests on every push/PR to `master` |
 
 ## Reproducing
 
 ```bash
-pytest test_features.py     # 53 unit tests
+pytest tests/test_features.py     # 53 unit tests
 python train.py             # refits from features_cache.csv, rewrites artefacts/
 ```
 
 `train.py` reads `features_cache.csv`. To regenerate that from the images, set
-`FORCE_RECOMPUTE = True` in §1 of `global_analysis.ipynb` and run the feature cell (~8 minutes for
+`FORCE_RECOMPUTE = True` in section 1 of `global_analysis.ipynb` and run the feature cell (~8 minutes for
 1023 images).
 
 ## Limitations
 
-- **It fails on unseen attacks — measured, not suspected.** APCER 1.00 against 15 attack
+- **It fails on unseen attacks — measured in `external_validation.ipynb`.** APCER 1.00 against 15 attack
   videos from two public datasets (`external_validation.ipynb`). Six of nine features point
   the wrong way on that data, carrying 78% of the coefficient weight; the dominant feature
   `noise` is outright inverted. The geometry cues (`perpendicular_ratio`, `glare_area`,
