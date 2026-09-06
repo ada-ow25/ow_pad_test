@@ -1,0 +1,32 @@
+{
+  "feature_order": [
+    "noise",
+    "chroma_std",
+    "glare_area",
+    "line_ratio",
+    "hf_energy",
+    "prewitt_energy",
+    "orientation_entropy",
+    "perpendicular_ratio",
+    "hf_energy_pstd"
+  ],
+  "image_size": 1024,
+  "patch_grid": 8,
+  "thresholds_by_bpcer": {
+    "0.001": 0.9998932119351379,
+    "0.01": 0.8831455825962552,
+    "0.05": 0.2858741839534603,
+    "0.1": 0.08742359885132521
+  },
+  "default_threshold_bpcer": 0.01,
+  "default_threshold": 0.8831455825962552,
+  "trained_on": {
+    "bona_fide": 1000,
+    "attacks": 23
+  },
+  "calibration_seeds": 20,
+  "sklearn_version": "1.9.0",
+  "numpy_version": "2.4.6",
+  "out_of_fold_auc": 0.9895173913043479,
+  "caveat": "All 23 attacks come from a single presentation device, so these thresholds are calibrated against one attack instrument only."
+}
