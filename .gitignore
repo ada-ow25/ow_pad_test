@@ -4,7 +4,8 @@ __pycache__/
 .claude/
 .ipynb_checkpoints/
 data/
-scores.csv
+scores*.csv
+report_assets/
 external/monitors_attacks.tar.gz
 external/monitors/
 external/axon_display/attack/*.mp4

@@ -61,7 +61,8 @@ bake in whichever split happened to be used. Above is the Median attacks accepte
 spread across splits is 3–7 of 23 at the 1% point.
 
 The default is 1%: 5% catches nearly every attack but rejects one genuine user in twenty,
-which to me seems like a lot of friction for identity verification. (see`report_assets/det_curve.png`).
+which to me seems like a lot of friction for identity verification. See the DET curve in
+`report.docx` for the full operating-point trade-off.
 
 The 0.1% threshold sits in the extreme upper tail of 1000 bona fide scores. Pooling splits
 removes fold-assignment noise but cannot add information about that tail, which still rests
